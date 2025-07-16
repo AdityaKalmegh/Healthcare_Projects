@@ -1,0 +1,38 @@
+
+services:
+  postgis:
+    image: kartoza/postgis:16
+    container_name: postgis_container
+    restart: always
+    environment:
+      POSTGRES_USER: gisadmin
+      POSTGRES_PASSWORD: gisadmin
+      POSTGRES_DB: GIS_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgis_data:/var/lib/postgresql/data
+    networks:
+      - gis_network
+
+  pgadmin4:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: gisadmin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: gisadmin
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - gis_network
+
+volumes:
+  postgis_data:
+  pgadmin_data:
+
+networks:
+  gis_network:
+    driver: bridge
