@@ -7,6 +7,7 @@ df = pd.read_excel("patient_procedures.xlsx")
 # Load CSV
 df = pd.read_csv("patient_procedures.csv")
 
+
 # Function to transform the dataset
 def transform_procedures(df):
     long_rows = []
@@ -26,7 +27,10 @@ def transform_procedures(df):
                 "ProcedureScore": row[f"Procedure {n} Score"]
             })
 
-  print(df_long)
+    return pd.DataFrame(long_rows)
+
+# Apply transformation
+df_long = transform_procedures(df)
 
 df_long.to_csv("patient_procedures_long.csv", index=False)
 df_long.to_excel("patient_procedures_long.xlsx", index=False)
