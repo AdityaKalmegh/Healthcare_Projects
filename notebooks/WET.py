@@ -24,14 +24,17 @@ def transform_wet_procedures(df_WET):
             # --- Date Column (consistent pattern) ---
             date_col = f"WET {session_num}: Date"
 
-            # --- PCL-5 Score (may vary with spaces, colon, etc.) ---
-            pcl5_pattern = re.compile(
-                rf"WET {session_num}\s*:?\s*PCL-5 Score",
-                flags=re.IGNORECASE
-            )
-            pcl5_col = next((c for c in df_WET.columns if pcl5_pattern.fullmatch(c)), None)
-            if pcl5_col is None:
-                raise ValueError(f"PCL-5 Score column missing for WET {session_num}")
+          # PCL-5 Score (extremely flexible matching)
+pcl5_pattern = re.compile(
+    rf"WET\s*{session_num}\s*:?\.?\s*PCL-5\s*Score",
+    flags=re.IGNORECASE
+)
+
+pcl5_col = next((c for c in df_WET.columns if pcl5_pattern.search(c)), None)
+
+if pcl5_col is None:
+    print("DEBUG: Columns found:", list(df_WET.columns))
+    raise ValueError(f"PCL-5 Score column missing for WET {session_num}")
 
             # --- SUD Pre-Tx ---
             pre_sud_pattern = re.compile(
